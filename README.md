@@ -50,17 +50,17 @@ curl http://localhost:8000/new
 后续的请求，都会在内存中进行自增返回，并且保证返回的 ID 不会超过设置的上限，到达上限后会再次从 MySQL 中更新数据，返回新的初始 ID 。
 
 ### 参考
-* seqsrv(https://gitee.com/qichengzx/seqsvr/)
+* seqsrv（https://gitee.com/qichengzx/seqsvr/）
 * Tinyid（https://github.com/didi/tinyid）是用Java开发的一款分布式id生成系统，基于数据库号段算法实现，关于这个算法可以参考美团leaf或者tinyid原理介绍。Tinyid扩展了leaf-segment算法，支持了多db(master)，同时提供了java-client(sdk)使id生成本地化，获得了更好的性能与可用性。Tinyid在滴滴客服部门使用，均通过tinyid-client方式接入，每天生成亿级别的id。
 * twitter snowflake（https://github.com/twitter-archive/snowflake）
-* 百度uid-generator（https://github.com/baidu/uid-generator）: 这是基于snowflake方案实现的开源组件，借用未来时间、缓存等手段，qps可达600w+
-* 美团leaf（https://tech.meituan.com/MT_Leaf.html）: 该篇文章详细的介绍了db号段和snowflake方案，近期也进行了Leaf开源
+* 百度uid-generator（https://github.com/baidu/uid-generator）这是基于snowflake方案实现的开源组件，借用未来时间、缓存等手段，qps可达600w+
+* 美团leaf（https://tech.meituan.com/MT_Leaf.html）该篇文章详细的介绍了db号段和snowflake方案，近期也进行了Leaf开源
 
 ##### 核心SQL
 
 ```mysql
 REPLACE INTO `seq_number` (uuid) VALUES ("54f5a3e2-e04c-4664-81db-d7f6a1259d01");
-```
+
 
 ### TODO
 * 高可用
