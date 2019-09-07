@@ -1,5 +1,5 @@
 # seq
-基于mysql的序列号生成器，用go实现
+基于mysql的全局序列号生成器，用go实现
 
 ### 特性
 
@@ -36,9 +36,11 @@ CREATE TABLE `seq_number` (
 ### 使用
 
 ```shell
-curl http://localhost:8000/new
-
+curl http://localhost:8000/nextId
 {"code":0,"msg":"ok","data":{"id":101}}
+
+curl http://localhost:8000/nextIdSimple
+102
 ```
 
 ### 原理
