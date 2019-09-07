@@ -17,6 +17,29 @@
 * github.com/go-sql-driver/mysql
 * github.com/satori/go.uuid
 
+### 安装
+
+**注意:需要在启动之前创建数据库并修改配置文件中数据库的配置。**
+
+单独编译：
+
+```shell
+git clone https://github.com/spcent/seq.git
+cd seq
+go build .
+./seq
+```
+Docker 方式：
+
+Dockerfile 使用了 Docker 多阶段构建功能，需保证 Docker 版本在 17.05 及以上。详见：[Use multi-stage builds](https://docs.docker.com/develop/develop-images/multistage-build/)
+
+```shell
+git clone https://github.com/spcent/seq.git
+cd seq
+docker build seq:latest .
+docker run -p 8000:8000 seq:latest
+```
+
 ### 初始化数据库
 
 数据库名称可以自定义，修改config.yml即可。
