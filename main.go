@@ -75,8 +75,6 @@ func genId() int64 {
 
 		log.Printf("incr current id: %d failed", curID)
 	}
-
-	return -1
 }
 
 func nextIdSimple(w http.ResponseWriter, r *http.Request) {
