@@ -60,7 +60,7 @@ curl http://localhost:8000/new
 
 ```mysql
 REPLACE INTO `seq_number` (uuid) VALUES ("54f5a3e2-e04c-4664-81db-d7f6a1259d01");
-
+```
 
 ### TODO
 * 高可用
