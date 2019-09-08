@@ -62,34 +62,56 @@ func New(uuid uuid.UUID) (int64, error) {
 	return res.LastInsertId()
 }
 
-func NextId() int64 {
+// 生成新的id
+func genId() {
+	mu.Lock()
 	s := atomic.LoadInt64(&startID)
 	if s == 0 || curID >= maxID {
-		mu.Lock()
-		s = atomic.LoadInt64(&startID)
-		if s == 0 || curID >= maxID {
-			id, err := New(uid)
-			if err != nil {
-				log.Fatal(err)
-			}
-			log.Printf("get new id : %d for ip : %s，uuid : %s\n", id, host, uid)
+		id, err := New(uid)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("get new id : %d for ip : %s，uuid : %s\n", id, host, uid)
 
-			atomic.StoreInt64(&startID, id*conf.STEP)
+		atomic.StoreInt64(&startID, id*conf.STEP)
+
+		// curID如果大于等于maxID则不考虑更新curID
+		if s == 0 {
 			atomic.StoreInt64(&curID, id*conf.STEP)
-			atomic.StoreInt64(&maxID, (id+1)*conf.STEP)
 		}
 
-		mu.Unlock()
-		log.Println("start id get =====>", startID)
+		atomic.StoreInt64(&maxID, (id+1)*conf.STEP)
+	}
+
+	mu.Unlock()
+}
+
+func NextId() int64 {
+	// 获取起点值
+	s := atomic.LoadInt64(&startID)
+
+	// 这里缓存curID
+	nextId := atomic.LoadInt64(&curID)
+
+	// 这里进行初步判断
+	if s == 0 || nextId >= maxID {
+		genId()
 	}
 
 	// 有点暴力，需要压力测试看看效果
 	for {
-		if atomic.CompareAndSwapInt64(&curID, curID, curID+1) {
-			// quit only when CompareAndSwap success, otherwise retry
-			return atomic.LoadInt64(&curID)
+		// 需要保证nextId不能大于maxID，防止出现数据重复
+		nextId = atomic.LoadInt64(&curID)
+		// 这里的curID在高并发的情况下，可能大于maxID
+		if nextId >= maxID {
+			genId()
 		}
 
-		log.Printf("incr current id: %d failed", curID)
+		if atomic.CompareAndSwapInt64(&curID, nextId, nextId+1) {
+			// quit only when CompareAndSwap success, otherwise retry
+			return nextId
+		}
+
+		log.Printf("incr current id: %d failed", nextId)
 	}
 }
