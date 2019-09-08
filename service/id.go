@@ -24,14 +24,8 @@ var (
 	maxID   int64
 	uid     = uuid.Must(uuid.NewV4(), nil)
 	host, _ = os.Hostname()
-	conf    *Config
 	mu      sync.Mutex
 )
-
-func init() {
-	conf = NewConfig()
-	initDB(conf.MySQL)
-}
 
 func initDB(conf MySQL) {
 	dsn := conf.User + ":" + conf.PassWord + "@" + conf.Host + "/" + conf.Database + "?charset=utf8&loc=Asia%2FShanghai"
@@ -47,10 +41,6 @@ func initDB(conf MySQL) {
 
 	db.SetMaxIdleConns(conf.MaxIdle)
 	db.SetMaxOpenConns(conf.MaxOpen)
-}
-
-func Addr() string {
-	return conf.PORT
 }
 
 func New(uuid uuid.UUID) (int64, error) {
@@ -102,6 +92,7 @@ func NextId() int64 {
 	for {
 		// 需要保证nextId不能大于maxID，防止出现数据重复
 		nextId = atomic.LoadInt64(&curID)
+
 		// 这里的curID在高并发的情况下，可能大于maxID
 		if nextId >= maxID {
 			genId()

@@ -88,5 +88,5 @@ REPLACE INTO `seq_number` (uuid) VALUES ("54f5a3e2-e04c-4664-81db-d7f6a1259d01")
 ```
 
 ### TODO
-* 高可用
+* 高可用（在ab测试中，发现存在请求被hang住的情况，响应时间不是太稳定）
 * 批量获取

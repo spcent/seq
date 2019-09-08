@@ -21,6 +21,19 @@ type MySQL struct {
 	MaxOpen  int    `yaml:"maxopen"`
 }
 
+var (
+	conf    *Config
+)
+
+func init() {
+	conf = NewConfig()
+	initDB(conf.MySQL)
+}
+
+func Addr() string {
+	return conf.PORT
+}
+
 func NewConfig() *Config {
 	b, err := ioutil.ReadFile("config.yml")
 	if err != nil {

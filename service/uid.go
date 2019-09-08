@@ -83,6 +83,7 @@ func (iw *IdWorker) timeReGen(last int64) int64 {
 func (iw *IdWorker) NextId() (ts int64, err error) {
 	iw.lock.Lock()
 	defer iw.lock.Unlock()
+
 	ts = iw.timeGen()
 	if ts == iw.lastTimeStamp {
 		iw.sequence = (iw.sequence + 1) & CSequenceMask
@@ -97,6 +98,7 @@ func (iw *IdWorker) NextId() (ts int64, err error) {
 		err = errors.New("Clock moved backwards, Refuse gen id")
 		return 0, err
 	}
+
 	iw.lastTimeStamp = ts
 	ts = (ts-CEpoch)<<CTimeStampShift | iw.workerId<<CWorkerIdShift | iw.sequence
 	return ts, nil
