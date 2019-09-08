@@ -1,5 +1,5 @@
 # seq
-基于mysql的全局序列号生成器，用go实现
+基于mysql的全局序列号生成器，用go实现，同时支持worker和db模式。对于订单号，可以选择worker模式，对于用户id这种，可以采用db模式。
 
 ### 特性
 
@@ -78,7 +78,7 @@ curl http://localhost:8000/worker/1
 后续的请求，都会在内存中进行自增返回，并且保证返回的 ID 不会超过设置的上限，到达上限后会再次从 MySQL 中更新数据，返回新的初始 ID 。
 
 ### 参考
-* seqsrv（https://gitee.com/qichengzx/seqsvr/）: 全局唯一序列号生成服务
+* seqsrv（https://gitee.com/qichengzx/seqsvr）: 全局唯一序列号生成服务
 * Tinyid（https://github.com/didi/tinyid）: 是用Java开发的一款分布式id生成系统，基于数据库号段算法实现，关于这个算法可以参考美团leaf或者tinyid原理介绍。Tinyid扩展了leaf-segment算法，支持了多db(master)，同时提供了java-client(sdk)使id生成本地化，获得了更好的性能与可用性。Tinyid在滴滴客服部门使用，均通过tinyid-client方式接入，每天生成亿级别的id。
 * twitter snowflake（https://github.com/twitter-archive/snowflake）
 * 百度uid-generator（https://github.com/baidu/uid-generator）: 这是基于snowflake方案实现的开源组件，借用未来时间、缓存等手段，qps可达600w+
