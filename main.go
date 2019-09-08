@@ -30,7 +30,6 @@ func formatJsonErr(err error) string {
 	res, marshallErr := json.Marshal(resp)
 	if marshallErr != nil {
 		log.Println("marshall error: ", marshallErr)
-		return marshallErr.Error()
 	}
 
 	return string(res)
@@ -58,20 +57,11 @@ func formatJsonSuccess(nextId int64) string {
 func main() {
 	// 返回下一个可用的id，格式为json
 	http.HandleFunc("/nextId", func(w http.ResponseWriter, r *http.Request) {
-		currentId := service.NextId()
-
 		w.Header().Set("Content-Type", "application/json")
+
+		currentId := service.NextId()
 		log.Printf("current id : %d\n", currentId)
-		resp := response{
-			Code: 0,
-			Msg:  "ok",
-			Data: H{
-				"id": currentId,
-			},
-		}
-	
-		res, _ := json.Marshal(resp)
-		fmt.Fprintf(w, string(res))
+		fmt.Fprintf(w, formatJsonSuccess(currentId))
 	
 		return
 	})
@@ -82,7 +72,7 @@ func main() {
 
 		log.Printf("current id : %d\n", currentId)
 		fmt.Fprintf(w, "%d", currentId)
-	
+
 		return
 	})
 
@@ -90,6 +80,8 @@ func main() {
 
 	// 采用snowflake算法生成全局唯一的id
 	http.HandleFunc("/worker/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
 		id, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/worker/"))
 		if err != nil {
 			fmt.Fprintf(w, formatJsonErr(err))

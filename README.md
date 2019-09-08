@@ -64,6 +64,9 @@ curl http://localhost:8000/nextId
 
 curl http://localhost:8000/nextIdSimple
 102
+
+curl http://localhost:8000/worker/1
+{"code":0,"msg":"ok","data":{"id":390637407633936384}}
 ```
 
 ### 原理
