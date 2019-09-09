@@ -38,7 +38,7 @@ Dockerfile 使用了 Docker 多阶段构建功能，需保证 Docker 版本在 1
 ```shell
 git clone https://github.com/spcent/seq.git
 cd seq
-docker build seq:latest .
+docker build -t seq:latest .
 docker run -p 8000:8000 seq:latest
 ```
 
