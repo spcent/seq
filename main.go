@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"	
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,7 +11,7 @@ import (
 	"seq/service"
 )
 
-type H map[string]interface{}
+type H map[string]any
 
 type response struct {
 	Code int    `json:"code"`
@@ -22,7 +22,7 @@ type response struct {
 func formatJsonErr(err error) string {
 	resp := response{
 		Code: 1,
-		Msg: err.Error(),
+		Msg:  err.Error(),
 	}
 
 	log.Println("error occurred: ", err)
@@ -62,7 +62,7 @@ func main() {
 		currentId := service.NextId()
 		log.Printf("current id : %d\n", currentId)
 		fmt.Fprintf(w, formatJsonSuccess(currentId))
-	
+
 		return
 	})
 
